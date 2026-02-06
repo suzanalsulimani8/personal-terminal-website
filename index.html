@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SUZY_SYSTEM_v2.2.0</title>
+    <style>
+        /* تصميم الشاشة السوداء */
+        body {
+            background-color: #000;
+            color: #39ff14; /* الأخضر النيوني الكلاسيكي */
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            overflow: hidden;
+        }
+
+        #terminal {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #111;
+            padding: 10px;
+            background: rgba(0, 5, 0, 0.9);
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+
+        .line { margin-bottom: 15px; line-height: 1.2; }
+        .command { color: #fff; font-weight: bold; }
+        .output { color: #00f2ff; display: block; margin-top: 5px; } /* اللون الأزرق للمعلومات */
+
+        /* تنسيق الـ ASCII Art */
+        pre {
+            margin: 0;
+            line-height: 1.1;
+            font-size: 14px;
+            color: #39ff14;
+        }
+
+        #input-area {
+            border-top: 1px solid #222;
+            padding-top: 15px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* أزرار التشغيل */
+        button {
+            background: transparent;
+            border: 1px solid #39ff14;
+            color: #39ff14;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #39ff14;
+            color: #000;
+            box-shadow: 0 0 10px #39ff14;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #39ff14;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* سكرول بار مخفي */
+        #terminal::-webkit-scrollbar { width: 5px; }
+        #terminal::-webkit-scrollbar-thumb { background: #222; }
+    </style>
+</head>
+<body>
+
+<div id="terminal">
+    <pre>
+  ____  _   _ ________     __   ____   ____ 
+ / ___|| | | |__  /\ \   / /  / __ \ / ___|
+ \___ \| | | | / /  \ \ / /  | |  | |\___ \
+  ___) | |_| |/ /_   \ V /   | |__| | ___) |
+ |____/ \___//____|   |_|     \____/ |____/ 
+    </pre>
+    <div class="line">--------------------------------------------</div>
+    <div class="line">CORE_VERSION: 2.2.0 | REGION: MAKKAH_SA</div>
+    <div class="line">SYSTEM_STATUS: <span style="color: #39ff14;">STABLE</span> | USER: SUZAN</div>
+    <div class="line">--------------------------------------------</div>
+    
+    <div id="logs">
+        <div class="line">Waiting for command input...<span class="cursor"></span></div>
+    </div>
+</div>
+
+<div id="input-area">
+    <button onclick="runCmd('bio')">RUN bio.exe</button>
+    <button onclick="runCmd('work')">RUN career.sh</button>
+    <button onclick="runCmd('family')">RUN network_scan</button>
+    <button onclick="runCmd('likes')">RUN hobbies.app</button>
+    <button onclick="runCmd('clear')">CLEAR SCREEN</button>
+</div>
+
+<script>
+    const logs = document.getElementById('logs');
+
+    function runCmd(cmd) {
+        if (cmd === 'clear') {
+            logs.innerHTML = '<div class="line">System buffer cleared. Ready...<span class="cursor"></span></div>';
+            return;
+        }
+
+        // إزالة الكيرسر القديم
+        const oldCursor = document.querySelector('.cursor');
+        if (oldCursor) oldCursor.remove();
+
+        let ascii = "";
+        let info = "";
+
+        if (cmd === 'bio') {
+            ascii = `
+      _______
+     /       \\
+    |  O   O  |  
+    |    ^    |  
+     \\  ___  /   
+      \\_____/    `;
+            info = `[NAME]: Suzan
+[AGE]: 22
+[CITY]: Makkah, Saudi Arabia
+[FAV_COLOR]: Black (Terminal Theme Engaged)`;
+        } 
+        else if (cmd === 'work') {
+            ascii = `
+     _________________
+    | [ < / > ]       |
+    |   WEB DEVELOPER |
+    |   GOLD MEDALIST |
+    |_________________|`;
+            info = `[JOB]: IT Support @ Holy Makkah
+[SKILLS]: Web Development / Systems Maintenance
+[ACHIEVEMENT]: 1st Place - Saudi Skills competition
+[EXP]: International Skills Participant`;
+        }
+        else if (cmd === 'family') {
+            ascii = `
+       (P)---(P)
+        | \\ / |
+       (S)---(S)
+        | / \\ |
+       (B)---(B) `;
+            info = `[NETWORK_NODES]: 6 Active Connections
+[MEMBERS]: Parents, 2 Brothers, 2 Sisters
+[STATUS]: Connection Strong`;
+        }
+        else if (cmd === 'likes') {
+            ascii = `
+     (🍔)  +  (☕)
+     BURGER + COFFEE`;
+            info = `[HOBBIES]: Coding, Drawing, Singing
+[ENERGY_SOURCE]: Burger (Primary) / Coffee (Secondary)`;
+        }
+
+        const newLog = document.createElement('div');
+        newLog.className = 'line';
+        newLog.innerHTML = `
+            <span class="command">suzy@makkah:~$ ./${cmd}</span>
+            <pre>${ascii}</pre>
+            <span class="output">${info.replace(/\n/g, '<br>')}</span>
+            <span class="cursor"></span>
+        `;
+        logs.appendChild(newLog);
+        
+        // النزول لآخر الشاشة تلقائياً
+        document.getElementById('terminal').scrollTop = document.getElementById('terminal').scrollHeight;
+    }
+</script>
+
+</body>
+</html>
